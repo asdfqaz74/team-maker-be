@@ -11,18 +11,18 @@ const upload = multer({ dest: os.tmpdir() });
 
 router.post("/upload", upload.single("file"), async (req, res) => {
   try {
+    if (!req.file) {
+      return res.status(400).json({ error: "파일이 필요합니다" });
+    }
     const filePath = req.file.path;
-    const parsed = await processRoflFile(filePath);
+    console.log("Uploaded file path:", filePath);
 
-    const newMatch = await Match.create({
-      players: parsed.players,
-      maxDamage: parsed.maxDamage,
-      uploadedBy: null,
-    });
+    const parsed = await processRoflFile(filePath);
+    console.log("Parsed data:", parsed);
 
     fs.unlinkSync(filePath);
 
-    res.status(201).json({ message: "업로드 성공", match: newMatch });
+    res.status(201).json({ message: "업로드 성공", match: parsed });
   } catch (err) {
     console.error("업로드 오류:", err);
     res.status(500).json({ error: "서버 오류" });

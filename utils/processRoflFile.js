@@ -12,21 +12,27 @@ exports.processRoflFile = async (filePath) => {
 
     const parsedMetadata = JSON.parse(rawMetadata.toString());
 
-    // statsJson을 JSON 객체로 변환
     const statsJson = JSON.parse(parsedMetadata.statsJson);
+    console.log("statsJson: ", statsJson.slice(0, 10));
 
-    const sortedPosition = ["TOP", "JUNGLE", "MIDDLE", "BOTTOM", "UTILITY"];
+    const positionMap = {
+      TOP: "top",
+      JUNGLE: "jug",
+      MIDDLE: "mid",
+      BOTTOM: "adc",
+      UTILITY: "sup",
+    };
 
     const filteredStats = statsJson.map((player) => ({
       userNickname: "",
       champion: player.SKIN,
       team: player.TEAM === 100 ? "Blue" : "Red",
-      position: player.TEAM_POSITION,
+      position: positionMap[player.TEAM_POSITION] || "Unknown",
       kills: Number(player.CHAMPIONS_KILLED),
       deaths: Number(player.NUM_DEATHS),
       assists: Number(player.ASSISTS),
-      totalDamage_dealt: Number(player.TOTAL_DAMAGE_DEALT),
-      totalDamage_taken: Number(player.TOTAL_DAMAGE_TAKEN),
+      totalDamageDealt: Number(player.TOTAL_DAMAGE_DEALT_TO_CHAMPIONS),
+      totalDamageTaken: Number(player.TOTAL_DAMAGE_TAKEN),
       boughtWards: Number(player.VISION_WARDS_BOUGHT_IN_GAME),
       wardsPlaced: Number(player.WARD_PLACED),
       wardsKilled: Number(player.WARD_KILLED),
@@ -35,11 +41,11 @@ exports.processRoflFile = async (filePath) => {
     }));
 
     const maxDamageValue = Math.max(
-      ...filteredStats.map((player) => player.totalDamage_dealt)
+      ...filteredStats.map((player) => player.totalDamageDealt)
     );
+    const maxDamage = maxDamageValue + 1000;
 
-    const maxDamage = maxDamageValue + 500;
-
+    const sortedPosition = ["top", "jug", "mid", "adc", "sup"];
     const sortedStats = filteredStats.sort(
       (a, b) =>
         a.team.localeCompare(b.team) ||
