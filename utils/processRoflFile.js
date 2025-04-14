@@ -13,7 +13,6 @@ exports.processRoflFile = async (filePath) => {
     const parsedMetadata = JSON.parse(rawMetadata.toString());
 
     const statsJson = JSON.parse(parsedMetadata.statsJson);
-    console.log("statsJson: ", statsJson.slice(0, 10));
 
     const positionMap = {
       TOP: "top",
