@@ -18,7 +18,6 @@ router.post("/upload", upload.single("file"), async (req, res) => {
     console.log("Uploaded file path:", filePath);
 
     const parsed = await processRoflFile(filePath);
-    console.log("Parsed data:", parsed);
 
     fs.unlinkSync(filePath);
 
