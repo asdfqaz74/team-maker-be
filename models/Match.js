@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const PlayerSchema = new mongoose.Schema({
+const PlayerStatsSchema = new mongoose.Schema({
   userNickname: String,
   champion: String,
   team: { type: String, enum: ["Blue", "Red"] },
@@ -19,11 +19,22 @@ const PlayerSchema = new mongoose.Schema({
 
 const MatchSchema = new mongoose.Schema(
   {
-    players: [PlayerSchema],
+    players: [PlayerStatsSchema],
+    uploadedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Member",
+      required: true,
+    },
     maxDamage: Number,
-    uploadedBy: mongoose.Schema.Types.ObjectId, // 나중에 붙이기
+    banChampion: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Champion",
+        required: true,
+      },
+    ],
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Match", MatchSchema);
+export default mongoose.models.Match || mongoose.model("Match", MatchSchema);
