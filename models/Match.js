@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const PlayerStatsSchema = new mongoose.Schema({
   userNickname: String,
@@ -37,4 +37,4 @@ const MatchSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.models.Match || mongoose.model("Match", MatchSchema);
+module.exports = mongoose.models.Match || mongoose.model("Match", MatchSchema);
