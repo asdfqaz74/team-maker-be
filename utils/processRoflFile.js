@@ -25,7 +25,7 @@ exports.processRoflFile = async (filePath) => {
     const filteredStats = statsJson.map((player) => ({
       userNickname: "",
       champion: player.SKIN,
-      team: player.TEAM === "100" ? "Blue" : "Red",
+      team: String(player.TEAM) === "100" ? "Blue" : "Red",
       position: positionMap[player.TEAM_POSITION] || "Unknown",
       kills: Number(player.CHAMPIONS_KILLED),
       deaths: Number(player.NUM_DEATHS),
